@@ -17,9 +17,10 @@ jobs:
       - name: Get Win 10 SDK Reg Keys
         run: reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" c:/regkeys/winsdk.reg
 
+      # This is blowing up saying the container is not compatible with the host
       - name: Run Docker Image
         run: |
-              docker run --isolation=hyperv `
+              docker run `
               --mount type=bind,source=${{ github.workspace }}\test-project,target=c:/workspace `
               --mount type=bind,source=c:/regkeys,target=c:/regkeys `
               --mount type=bind,source=c:/output,target=c:/output `
