@@ -19,7 +19,7 @@ jobs:
 
       - name: Run Docker Image
         run: |
-              docker run `
+              docker run --isolation=hyperv `
               --mount type=bind,source=${{ github.workspace }}\test-project,target=c:/workspace `
               --mount type=bind,source=c:/regkeys,target=c:/regkeys `
               --mount type=bind,source=c:/output,target=c:/output `
