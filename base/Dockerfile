@@ -7,7 +7,8 @@
 # Resorting to full sized windows image however this doesn't run on github due to mismatched versions
 # Not sure if that means that the image version is too different or if we can't run windows containers
 # on windows server
-FROM mcr.microsoft.com/windows:1909
+# FROM mcr.microsoft.com/windows:1909
+FROM mcr.microsoft.com/windows:1809
 # FROM mcr.microsoft.com/windows/servercore:1909
 # FROM mcr.microsoft.com/windows/server:ltsc2022
 
