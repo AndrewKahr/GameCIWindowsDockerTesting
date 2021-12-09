@@ -20,7 +20,7 @@ jobs:
       - name: Run Docker Image
         run: |
               docker run `
-              --mount type=bind,source=${{ env.GITHUB_WORKSPACE }}\test-project,target=c:/workspace `
+              --mount type=bind,source=${{ github.workspace }}\test-project,target=c:/workspace `
               --mount type=bind,source=c:/regkeys,target=c:/regkeys `
               --mount type=bind,source=c:/output,target=c:/output `
               --mount type=bind,source="C:\Program Files (x86)\Microsoft Visual Studio",target="c:\Program Files (x86)\Microsoft Visual Studio" `
