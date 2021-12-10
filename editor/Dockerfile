@@ -1,4 +1,4 @@
-FROM gameci/windows-hub
+FROM gameci/windows-hub as Builder
 SHELL ["cmd", "/C"]
 
 # TODO: Need to remove the hardcoded versions
@@ -10,8 +10,20 @@ RUN "C:/Program Files/Unity Hub/Unity Hub.exe" -- --headless install \
                                                --module windows-il2cpp \
                                                & if %ERRORLEVEL% EQU 1 exit 0
 
-# At this point, it would ideal to from gameci/windows-base to 
-# remove the overhead added by the hub
+
+FROM gameci/windows-base
+
+# Copy the editor from the builder to the final editor image
+COPY --from=Builder ["C:/Program Files/Unity/Hub/Editor/", "C:/Program Files/Unity/Hub/Editor/"]
+
+# Need to grab these dependencies that the editor needs to run
+COPY --from=Builder C:/windows/system32/MSVCP100.dll \
+                    C:/windows/system32/MSVCP120.dll \
+                    C:/windows/system32/MSVCR100.dll \
+                    C:/windows/system32/MSVCR120.dll \
+                    C:/windows/system32/
+
+SHELL ["cmd", "/C"]
 
 # Enable executing powershell scripts
 RUN powershell -Command Set-ExecutionPolicy unrestricted
