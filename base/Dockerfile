@@ -1,18 +1,20 @@
-# Initially tried with server core with dotnet, however unity doesn't run
-# likely because servercore strips much of the support binaries out which
-# breaks unity
-# https://forum.unity.com/threads/player-with-server-build-silently-fails-on-windows-server-core.898337/
-# FROM mcr.microsoft.com/dotnet/framework/sdk:4.8-windowsservercore-ltsc2019
+# Need this image to grab missing dlls for the server core version
+FROM mcr.microsoft.com/windows:1809 as dll-source
 
-# Resorting to full sized windows image however this doesn't run on github due to mismatched versions
-# Not sure if that means that the image version is too different or if we can't run windows containers
-# on windows server
-# FROM mcr.microsoft.com/windows:1909
-FROM mcr.microsoft.com/windows:1809
-# FROM mcr.microsoft.com/windows/servercore:1909
-# FROM mcr.microsoft.com/windows/server:ltsc2022
+# We use the .net framework servercore image because we will need the .net support
+# anyway and there is no real benefit to try and make this smaller by
+# basing on the blank windowsservercore because only the .net version is
+# cached on the github actions runner. 
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8-windowsservercore-ltsc2019
 
-# Attempts to get AppCompatibility installed on a servercore image as this theoretically will allow
-# core images to work. No luck so far
-# RUN powershell -Command Set-Service 'wuauserv' -StartupType Automatic
-# RUN powershell -command Add-WindowsCapability -Online -Name ServerCore.AppCompatibility~~~~0.0.1.0 -LimitAccess
+# DLLs for Unity Hub
+COPY --from=dll-source c:/windows/system32/BluetoothApis.dll c:/windows/system32/
+COPY --from=dll-source c:/windows/system32/bthprops.cpl c:/windows/system32/
+COPY --from=dll-source c:/windows/system32/dxva2.dll c:/windows/system32/
+COPY --from=dll-source c:/windows/system32/mf.dll c:/windows/system32/
+COPY --from=dll-source c:/windows/system32/mfplat.dll c:/windows/system32/
+COPY --from=dll-source c:/windows/system32/mfreadwrite.dll c:/windows/system32/
+
+# DLLs for Unity Editor
+COPY --from=dll-source c:/windows/system32/opengl32.dll c:/windows/system32/
+COPY --from=dll-source c:/windows/system32/glu32.dll c:/windows/system32/
