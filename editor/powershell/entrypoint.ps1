@@ -1,5 +1,5 @@
 # First we activate Unity
-python -u c:/scripts/python/modules/activate_unity.py
+& "$PSScriptRoot\steps\activate.ps1"
 
 # Next we import the registry keys that point Unity to the win 10 sdk
 reg import c:\regkeys\winsdk.reg
@@ -8,7 +8,7 @@ reg import c:\regkeys\winsdk.reg
 regsvr32 C:\ProgramData\Microsoft\VisualStudio\Setup\x64\Microsoft.VisualStudio.Setup.Configuration.Native.dll
 
 # Now we can build our project
-python -u c:/scripts/python/build_project.py
+& "$PSScriptRoot\steps\build.ps1"
 
 # Finally free the seat for the activated license
-python -u c:/scripts/python/modules/return_license.py
+& "$PSScriptRoot\steps\return_license.ps1"
