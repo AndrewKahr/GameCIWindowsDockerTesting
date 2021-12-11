@@ -16,7 +16,10 @@ jobs:
       
       - name: Get Win 10 SDK Reg Keys
         run: reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" c:/regkeys/winsdk.reg
-
+        
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        
       - name: Run Docker Image
         run: |
               docker run `
@@ -38,6 +41,9 @@ jobs:
               --env BUILD_FILE=output.exe `
               --env VERSION=v1.0.0 `
               andrew10001/editor:latest
+              
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
 
       - uses: actions/upload-artifact@v2
         with:
