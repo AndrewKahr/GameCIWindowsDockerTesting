@@ -21,16 +21,10 @@ jobs:
         run: mkdir c:\pigz
       
       - name: Download pigz
-        run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/pigz.exe -OutFile c:\pigz\pigz.exe
+        run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/pigz.exe -OutFile c:\windows\system32\pigz.exe
         
       - name: Download unpigz
-        run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/unpigz.exe -OutFile c:\pigz\unpigz.exe
-        
-      - name: Add pigz to path
-        run: $env:Path += ";C:\pigz"
-        
-      - name: List Files From System32
-        run: dir c:\windows\system32
+        run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/unpigz.exe -OutFile c:\windows\system32\unpigz.exe
         
       - name: Check if unpigz is in path
         run: unpigz.exe
