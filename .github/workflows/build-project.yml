@@ -33,7 +33,7 @@ jobs:
         run: dir c:\windows\system32
         
       - name: Check if unpigz is in path
-        run: unpigz
+        run: unpigz.exe
         
       - name: Run Docker Image
         run: |
