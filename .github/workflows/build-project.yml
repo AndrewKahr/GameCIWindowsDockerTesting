@@ -50,6 +50,10 @@ jobs:
               --env BUILD_FILE=output.exe `
               --env VERSION=v1.0.0 `
               andrew10001/editor:latest
+              
+      - name: Print Docker Log
+        shell: cmd
+        run: type %APPDATA%\Local\Docker\log.txt
 
       - uses: actions/upload-artifact@v2
         with:
