@@ -20,15 +20,15 @@ jobs:
       - name: Pigz dir
         run: mkdir c:\pigz
       
-      - name: Install pigz to system32
+      - name: Download pigz
         run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/pigz.exe -OutFile c:\pigz\pigz.exe
         
-      - name: Install unpigz to system32
+      - name: Download unpigz
         run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/unpigz.exe -OutFile c:\pigz\unpigz.exe
         
       - name: Add pigz to path
         shell: cmd
-        run: pathman /au c:\pigz
+        run: pathed /append c:\pigz /machine
         
       - name: List Files From System32
         run: dir c:\windows\system32
@@ -60,7 +60,11 @@ jobs:
         
       - name: Print Docker Log
         shell: powershell
-        run: Get-EventLog -LogName Application -Source Docker -After (Get-Date).AddMinutes(-15)
+        run: |
+              Get-WinEvent -FilterHashtable @{
+                                              LogName='Application'
+                                              ProviderName='Docker'
+                                             }
 
       - uses: actions/upload-artifact@v2
         with:
