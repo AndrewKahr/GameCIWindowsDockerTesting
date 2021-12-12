@@ -54,6 +54,9 @@ jobs:
       - name: Print Docker Log
         shell: cmd
         run: type %APPDATA%\Local\Docker\log.txt
+        
+      - name: Print Docker Log 2
+        run: Get-EventLog -LogName Application -Source Docker -After (Get-Date).AddMinutes(-15)
 
       - uses: actions/upload-artifact@v2
         with:
