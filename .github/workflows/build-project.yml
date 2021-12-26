@@ -80,7 +80,7 @@ jobs:
           name: TVOSWindowsBuild
           path: ${{ github.workspace }}\output
 
-build-uwp-windows:
+  build-uwp-windows:
     runs-on: windows-2019
     
     steps:
