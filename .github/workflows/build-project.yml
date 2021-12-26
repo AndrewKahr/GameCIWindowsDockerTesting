@@ -7,28 +7,13 @@ jobs:
     steps:
       - name: checkout repo content
         uses: actions/checkout@v2
-      
-      - name: Make output folder
-        run: mkdir ${{ github.workspace }}\output
 
       - name: Make regkeys folder
         run: mkdir c:/regkeys
       
       - name: Get Win 10 SDK Reg Keys
         run: reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" c:/regkeys/winsdk.reg
-      
-      - name: Pigz dir
-        run: mkdir c:\pigz
-      
-      - name: Download pigz
-        run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/pigz.exe -OutFile c:\windows\system32\pigz.exe
-        
-      - name: Download unpigz
-        run: Invoke-WebRequest -Uri https://kjkpub.s3.amazonaws.com/software/pigz/2.3.1-149/unpigz.exe -OutFile c:\windows\system32\unpigz.exe
-        
-      - name: Check if unpigz is in path
-        run: unpigz.exe
-        
+
       - name: Run Docker Image
         run: |
               docker run `
@@ -48,18 +33,89 @@ jobs:
               --env BUILD_NAME=output `
               --env BUILD_PATH=output `
               --env BUILD_FILE=output.exe `
-              --env VERSION=v1.0.0 `
-              andrew10001/editor:latest
-        
-      - name: Print Docker Log
-        shell: powershell
-        run: |
-              Get-WinEvent -FilterHashtable @{
-                                              LogName='Application'
-                                              ProviderName='Docker'
-                                             }
+              --env VERSION=1.0.0 `
+              andrew10001/editor:il2cpp
 
       - uses: actions/upload-artifact@v2
         with:
           name: IL2CPPWindowsBuild
+          path: ${{ github.workspace }}\output
+
+  build-tvOS-windows:
+    runs-on: windows-2019
+    
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2
+
+      - name: Make regkeys folder
+        run: mkdir c:/regkeys
+      
+      - name: Get Win 10 SDK Reg Keys
+        run: reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" c:/regkeys/winsdk.reg
+      - name: Run Docker Image
+        run: |
+              docker run `
+              --mount type=bind,source=${{ github.workspace }},target=c:\workspace `
+              --mount type=bind,source=c:\regkeys,target=c:\regkeys `
+              --mount type=bind,source="C:\Program Files (x86)\Microsoft Visual Studio",target="c:\Program Files (x86)\Microsoft Visual Studio" `
+              --mount type=bind,source="C:\Program Files (x86)\Windows Kits",target="C:\Program Files (x86)\Windows Kits" `
+              --mount type=bind,source="C:\ProgramData\Microsoft\VisualStudio",target="C:\ProgramData\Microsoft\VisualStudio" `
+              --rm `
+              --env UNITY_SERIAL=${{ secrets.UNITY_SERIAL }} `
+              --env UNITY_USER=${{ secrets.UNITY_USER }} `
+              --env UNITY_PASS=${{ secrets.UNITY_PASS }} `
+              --env UNITY_VERSION=2020.3.24f1 `
+              --env BUILD_TARGET=tvOS `
+              --env GITHUB_WORKSPACE=C:\workspace `
+              --env PROJECT_PATH=test-project `
+              --env BUILD_NAME=output `
+              --env BUILD_PATH=output `
+              --env BUILD_FILE=output.exe `
+              --env VERSION=1.0.0 `
+              andrew10001/editor:tvos
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: TVOSWindowsBuild
+          path: ${{ github.workspace }}\output
+
+build-uwp-windows:
+    runs-on: windows-2019
+    
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2
+
+      - name: Make regkeys folder
+        run: mkdir c:/regkeys
+      
+      - name: Get Win 10 SDK Reg Keys
+        run: reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" c:/regkeys/winsdk.reg
+        
+      - name: Run Docker Image
+        run: |
+              docker run `
+              --mount type=bind,source=${{ github.workspace }},target=c:\workspace `
+              --mount type=bind,source=c:\regkeys,target=c:\regkeys `
+              --mount type=bind,source="C:\Program Files (x86)\Microsoft Visual Studio",target="c:\Program Files (x86)\Microsoft Visual Studio" `
+              --mount type=bind,source="C:\Program Files (x86)\Windows Kits",target="C:\Program Files (x86)\Windows Kits" `
+              --mount type=bind,source="C:\ProgramData\Microsoft\VisualStudio",target="C:\ProgramData\Microsoft\VisualStudio" `
+              --rm `
+              --env UNITY_SERIAL=${{ secrets.UNITY_SERIAL }} `
+              --env UNITY_USER=${{ secrets.UNITY_USER }} `
+              --env UNITY_PASS=${{ secrets.UNITY_PASS }} `
+              --env UNITY_VERSION=2020.3.24f1 `
+              --env BUILD_TARGET=WSAPlayer `
+              --env GITHUB_WORKSPACE=C:\workspace `
+              --env PROJECT_PATH=test-project `
+              --env BUILD_NAME=output `
+              --env BUILD_PATH=output `
+              --env BUILD_FILE=output.exe `
+              --env VERSION=1.0.0 `
+              andrew10001/editor:uwp
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: UWPWindowsBuild
           path: ${{ github.workspace }}\output
