@@ -15,6 +15,10 @@ jobs:
         run: reg export "HKLM\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" c:/regkeys/winsdk.reg
 
       - name: Run Docker Image
+        env:
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_USER: ${{ secrets.UNITY_USER }}
+          UNITY_PASS: ${{ secrets.UNITY_PASS }}
         run: |
               docker run `
               --mount type=bind,source=${{ github.workspace }},target=c:\workspace `
@@ -23,9 +27,9 @@ jobs:
               --mount type=bind,source="C:\Program Files (x86)\Windows Kits",target="C:\Program Files (x86)\Windows Kits" `
               --mount type=bind,source="C:\ProgramData\Microsoft\VisualStudio",target="C:\ProgramData\Microsoft\VisualStudio" `
               --rm `
-              --env UNITY_SERIAL=${{ secrets.UNITY_SERIAL }} `
-              --env UNITY_USER=${{ secrets.UNITY_USER }} `
-              --env UNITY_PASS=${{ secrets.UNITY_PASS }} `
+              --env UNITY_SERIAL `
+              --env UNITY_USER `
+              --env UNITY_PASS `
               --env UNITY_VERSION=2020.3.24f1 `
               --env BUILD_TARGET=StandaloneWindows64 `
               --env GITHUB_WORKSPACE=C:\workspace `
